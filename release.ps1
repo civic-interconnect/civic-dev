@@ -20,8 +20,8 @@
 # 4. Run the script: `.\release.ps1`
 
 # Set your versions
-$oldVersion = "0.0.1"
-$newVersion = "0.0.2"
+$oldVersion = "0.0.2"
+$newVersion = "0.0.3"
 
 $ErrorActionPreference = "Stop"
 
