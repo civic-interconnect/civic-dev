@@ -33,7 +33,16 @@ zig fmt .
 pre-commit run --all-files
 pre-commit run --all-files
 zig-out\bin\civic-dev.exe
-zig-out\bin\civic-dev.exe bump-version 0.0.0 0.0.1
+
+# make updates
+
+git add .
+git commit -m "describe changes"
+git push origin main
+
+# when ready, update version in release.ps1
+# then run it (it will add-commit-push changes and new tag)
+./release.ps1
 ```
 
 ## Add to Path
