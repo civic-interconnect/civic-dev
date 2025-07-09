@@ -20,8 +20,8 @@
 # 4. Run the script: `.\release.ps1`
 
 # Set your versions
-$oldVersion = "0.0.0"
-$newVersion = "0.0.1"
+$oldVersion = "0.0.1"
+$newVersion = "0.0.2"
 
 $ErrorActionPreference = "Stop"
 
@@ -39,13 +39,26 @@ function Invoke-Checked {
 Invoke-Checked "git pull origin main"
 
 # Clean everything
-Remove-Item -Recurse -Force .zig-cache, zig-out
+@(".zig-cache", "zig-out") | ForEach-Object {
+    if (Test-Path $_) {
+        Write-Host "Removing $_..."
+        Remove-Item -Recurse -Force $_
+    }
+}
 
 # Run tests before bumping
 Invoke-Checked "zig build test"
 
+# Build for release (ReleaseSafe)
+Invoke-Checked "zig build -Doptimize=ReleaseSafe"
+
 # Bump version in files
-Invoke-Checked "zig-out\bin\civic-dev.exe bump-version $oldVersion $newVersion"
+$exe = ".\zig-out\bin\civic-dev.exe"
+if (-not (Test-Path $exe)) {
+    Write-Error "ERROR: civic-dev.exe not found. Did you run zig build?"
+    exit 1
+}
+Invoke-Checked "& $exe bump-version $oldVersion $newVersion"
 
 # Commit version bump
 Invoke-Checked "git add ."

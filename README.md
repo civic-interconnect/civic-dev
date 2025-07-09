@@ -1,6 +1,6 @@
 # civic-dev (Command Line Interface)
 
-[![Version](https://img.shields.io/badge/version-v0.0.1-blue)](https://github.com/civic-interconnect/civic-dev/releases)
+[![Version](https://img.shields.io/badge/version-v0.0.2-blue)](https://github.com/civic-interconnect/civic-dev/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Build](https://github.com/civic-interconnect/civic-dev/actions/workflows/build.yml/badge.svg)](https://github.com/civic-interconnect/civic-dev/actions/workflows/build.yml)
 [![Nightly Zig Check](https://github.com/civic-interconnect/civic-dev/actions/workflows/zig_check.yml/badge.svg)](https://github.com/civic-interconnect/civic-dev/actions/workflows/zig_check.yml)
@@ -68,7 +68,7 @@ civic-dev [command] [options...]
 Examples:
 
 ```shell
-civic-dev bump-version 0.0.1 0.0.1
+civic-dev bump-version 0.0.2 0.0.2
 civic-dev sync-files --project py
 civic-dev check-policy
 ```
