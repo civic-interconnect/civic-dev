@@ -1,4 +1,4 @@
-name: Nightly Zig Check
+name: CLI Nightly Zig Check
 
 on:
   schedule:
