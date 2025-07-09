@@ -1,9 +1,8 @@
 # release.ps1
 # This script automates the release process for the civic-dev CLI tool.
 # It includes pulling the latest code, cleaning the build, running tests,
-# bumping the version, committing changes, tagging the release, building the
-# release binary, moving it to the releases folder, creating a zip archive,
-# and publishing the release on GitHub.
+# bumping the version, committing changes, tagging the release and pushing 
+# the changes and the tag to the remote repository.
 
 # Requirements:
 # - Git installed and configured
@@ -20,8 +19,8 @@
 # 4. Run the script: `.\release.ps1`
 
 # Set your versions
-$oldVersion = "0.0.2"
-$newVersion = "0.0.3"
+$oldVersion = "0.0.3"
+$newVersion = "0.0.4"
 
 $ErrorActionPreference = "Stop"
 
@@ -34,6 +33,14 @@ function Invoke-Checked {
         exit 1
     }
 }
+
+# Confirm main branch
+$currentBranch = git rev-parse --abbrev-ref HEAD
+if ($currentBranch -ne "main") {
+    Write-Error "ERROR: Not on main branch. You are on '$currentBranch'."
+    exit 1
+}
+
 
 # Always pull the latest code
 Invoke-Checked "git pull origin main"
@@ -52,13 +59,21 @@ Invoke-Checked "zig build test"
 # Build for release (ReleaseSafe)
 Invoke-Checked "zig build -Doptimize=ReleaseSafe"
 
-# Bump version in files
+Write-Host "Using the CLI to bump version from $oldVersion to $newVersion"
+
+# Bump version in files using the CLI tool 
 $exe = ".\zig-out\bin\civic-dev.exe"
 if (-not (Test-Path $exe)) {
     Write-Error "ERROR: civic-dev.exe not found. Did you run zig build?"
     exit 1
 }
 Invoke-Checked "& $exe bump-version $oldVersion $newVersion"
+
+# Run pre-commit hooks to update files
+Invoke-Checked "pre-commit run --all-files"
+
+# Re-run tests to pick up changes
+Invoke-Checked "pre-commit run --all-files"
 
 # Commit version bump
 Invoke-Checked "git add ."
@@ -75,7 +90,7 @@ Invoke-Checked "git push origin v$newVersion"
 # Remaining commands are automated in .github/workflows/release.yml
 #==================================================================
 # Build release binary
-# zig build -Drelease-safe=true
+# zig build -Doptimize=ReleaseSafe
 
 # Move binary into release folder
 # Move-Item ./zig-out/bin/civic-dev.exe ./releases/civic-dev.exe -Force

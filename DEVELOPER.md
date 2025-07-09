@@ -41,7 +41,7 @@ git commit -m "describe changes"
 git push origin main
 
 # when ready, update version in release.ps1
-# then run it (it will add-commit-push changes and new tag)
+# then run release.ps1 (it will add-commit-push changes and new tag)
 ./release.ps1
 ```
 

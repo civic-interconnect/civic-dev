@@ -19,7 +19,7 @@ jobs:
 
       - name: Build Release Binary
         run: |
-          zig build -Drelease-safe=true
+          zig build -Doptimize=ReleaseSafe
           Copy-Item zig-out\bin\civic-dev.exe civic-dev.exe
 
       - name: Zip Release
