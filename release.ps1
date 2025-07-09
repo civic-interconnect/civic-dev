@@ -1,7 +1,7 @@
 # release.ps1
 # This script automates the release process for the civic-dev CLI tool.
 # It includes pulling the latest code, cleaning the build, running tests,
-# bumping the version, committing changes, tagging the release and pushing 
+# bumping the version, committing changes, tagging the release and pushing
 # the changes and the tag to the remote repository.
 
 # Requirements:
@@ -41,7 +41,6 @@ if ($currentBranch -ne "main") {
     exit 1
 }
 
-
 # Always pull the latest code
 Invoke-Checked "git pull origin main"
 
@@ -61,7 +60,7 @@ Invoke-Checked "zig build -Doptimize=ReleaseSafe"
 
 Write-Host "Using the CLI to bump version from $oldVersion to $newVersion"
 
-# Bump version in files using the CLI tool 
+# Bump version in files using the CLI tool
 $exe = ".\zig-out\bin\civic-dev.exe"
 if (-not (Test-Path $exe)) {
     Write-Error "ERROR: civic-dev.exe not found. Did you run zig build?"
