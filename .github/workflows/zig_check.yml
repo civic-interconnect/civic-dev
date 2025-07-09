@@ -1,0 +1,23 @@
+name: Nightly Zig Check
+
+on:
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  build-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Zig (latest dev build)
+        uses: goto-bus-stop/setup-zig@v2
+        with:
+          version: master
+
+      - name: Build
+        run: zig build
+
+      - name: Run Tests
+        run: zig build test

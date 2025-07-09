@@ -1,0 +1,93 @@
+# This .gitignore file lists content that does NOT need to be tracked in the project history
+
+# ----------------------------------------
+# macOS system files
+# ----------------------------------------
+.DS_Store
+
+# ----------------------------------------
+# Visual Studio Code
+# ----------------------------------------
+.vscode/
+.zig/
+
+# ----------------------------------------
+# Environment variables and secrets
+# ----------------------------------------
+.env
+.env.*
+
+# ----------------------------------------
+# Python artifacts
+# ----------------------------------------
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ----------------------------------------
+# Logs and temp files
+# ----------------------------------------
+logs/
+tmp/
+*.swp
+*.bak
+*.tmp
+*.log
+
+# workflow caches
+.github/workflows/__pycache__/
+
+# Local PyPI credentials (typically at ~/.pypirc)
+.pypirc
+
+# ----------------------------------------
+# Storage (runtime pulled data snapshots)
+# ----------------------------------------
+storage/
+
+# ----------------------------------------
+# Zig build artifacts
+# ----------------------------------------
+
+# Build caches
+.zig-cache/
+zig-cache/
+
+# Zig output directories
+zig-out/
+
+# Individual object files or intermediate binaries
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.a
+
+# Debug symbols
+zig-out/bin/*.pdb
+
+# Common executables and test binaries
+test
+test.exe
+
+# Final release binaries and archives
+*.exe
+*.zip
+*.tar
+*.tar.gz
+
+# Common test artifacts
+test
+test.exe
+
+# Releases (handled manually)
+releases/

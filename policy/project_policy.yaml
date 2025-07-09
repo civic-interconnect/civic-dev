@@ -1,0 +1,42 @@
+# Civic Interconnect default project policy
+# civic-dev/policy/project_policy.yaml
+# =========================================
+
+required_files:
+  # Must exist in every Civic Interconnect repo.
+  - .gitattributes
+  - .gitignore
+  - .pre-commit-config.yaml
+  - DEVELOPER.md
+  - LICENSE
+  - README.md
+  - runtime_config.yaml
+
+pwa_project_files:
+  # Required for Progressive Web App projects.
+  - index.html
+  - manifest.json
+  - sw.js
+
+node_project_files:
+  # Required for Node.js projects.
+  - package.json
+
+python_project_files:
+  # Required for Python projects.
+  - pyproject.toml
+
+python_project_dirs:
+  # Required Python source code directories.
+  - src
+
+max_python_file_length: 1000
+
+docs:
+  docs_dir: docs
+  docs_api_dir: api
+
+log_subdir: logs
+log_file_template: "{time:YYYY-MM-DD}.log"
+log_level: INFO
+log_retention_days: 7
