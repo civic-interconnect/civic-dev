@@ -87,6 +87,7 @@ pub fn build(b: *std.Build) void {
 
     mods.get("check_policy").?.addImport("fs_utils", mods.get("fs_utils").?);
     mods.get("check_policy").?.addImport("policy_defaults", mods.get("policy_defaults").?);
+    mods.get("check_policy").?.addImport("repo_utils", mods.get("repo_utils").?);
 
     mods.get("layout").?.addImport("fs_utils", mods.get("fs_utils").?);
     mods.get("layout").?.addImport("policy_defaults", mods.get("policy_defaults").?);
@@ -137,18 +138,10 @@ pub fn build(b: *std.Build) void {
         "clean_docs.ps1",
     });
 
-    // Copy docs from zig-out/docs to ./docs
-    const copy_docs = b.addInstallDirectory(.{
-        .source_dir = b.path("zig-out/docs"),
-        .install_dir = .prefix,
-        .install_subdir = "../docs",
-    });
-
     // Define the docs build step
     const docs_step = b.step("docs", "Generate and install project documentation");
     docs_step.dependOn(&install_docs.step);
     docs_step.dependOn(&clean_docs_step.step);
-    docs_step.dependOn(&copy_docs.step);
 
     //
     // === BUILD TESTS ===
@@ -159,15 +152,17 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    if (target.result.os.tag == .windows) {
+        test_exe.linkSystemLibrary("advapi32");
+    }
 
-    // Add module imports if needed
+    // Add module imports as needed
     addImports(test_exe.root_module, mods);
 
     const run_tests = b.addRunArtifact(test_exe);
 
     // use either zig build test or zig build tests
     b.step("test", "Run all tests.").dependOn(&run_tests.step);
-    b.step("tests", "Run all tests.").dependOn(&run_tests.step);
 }
 
 //

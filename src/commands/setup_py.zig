@@ -72,8 +72,6 @@ fn removeMatchingDirs(pattern: []const u8) !void {
     }
 }
 
-
-
 /// CLI entry point for civic-dev setup-py.
 ///
 /// Sets up a fresh Python virtual environment for Civic Interconnect projects.

@@ -24,6 +24,7 @@
 const std = @import("std");
 const fs_utils = @import("fs_utils");
 const policy_defaults = @import("policy_defaults");
+const repo_utils = @import("repo_utils");
 
 /// Checks a policy JSON object for compliance in the given directory.
 ///
@@ -89,33 +90,36 @@ pub fn checkPolicyObject(
             }
         }
     }
+    const repo_type = try repo_utils.detectRepoType();
 
     // Check python_project_files
-    if (policy_object.get("python_project_files")) |files_array| {
-        for (files_array.array.items) |item| {
-            const filename = item.string;
-            if (!fs_utils.fileExistsInDir(dir, filename)) {
-                const msg = try std.fmt.allocPrint(
-                    allocator,
-                    "Missing Python project file: {s}",
-                    .{filename},
-                );
-                try issues.append(msg);
+    if (std.mem.eql(u8, repo_type, "python")) {
+        if (policy_object.get("python_project_files")) |files_array| {
+            for (files_array.array.items) |item| {
+                const filename = item.string;
+                if (!fs_utils.fileExistsInDir(dir, filename)) {
+                    const msg = try std.fmt.allocPrint(
+                        allocator,
+                        "Missing Python project file: {s}",
+                        .{filename},
+                    );
+                    try issues.append(msg);
+                }
             }
         }
-    }
 
-    // Check python_project_dirs
-    if (policy_object.get("python_project_dirs")) |dirs_array| {
-        for (dirs_array.array.items) |item| {
-            const dirname = item.string;
-            if (!fs_utils.dirExistsInDir(dir, dirname)) {
-                const msg = try std.fmt.allocPrint(
-                    allocator,
-                    "Missing Python project dir: {s}/",
-                    .{dirname},
-                );
-                try issues.append(msg);
+        // Check python_project_dirs
+        if (policy_object.get("python_project_dirs")) |dirs_array| {
+            for (dirs_array.array.items) |item| {
+                const dirname = item.string;
+                if (!fs_utils.dirExistsInDir(dir, dirname)) {
+                    const msg = try std.fmt.allocPrint(
+                        allocator,
+                        "Missing Python project dir: {s}/",
+                        .{dirname},
+                    );
+                    try issues.append(msg);
+                }
             }
         }
     }
@@ -148,7 +152,7 @@ pub fn checkPolicyObject(
 /// );
 ///
 /// if (result == 0) {
-///     std.debug.print("Project is compliant.\n", .{});
+///     std.debug.print("Project is Civic Interconnect compliant.\n", .{});
 /// } else {
 ///     std.debug.print("Policy issues detected.\n", .{});
 /// }
@@ -164,5 +168,16 @@ pub fn main(
     defer policy_parse_result.deinit();
     const policy = policy_parse_result.value;
     const result = try checkPolicyObject(policy.object, dir, allocator);
+
+    if (result.exit_code == 0) {
+        try stdout.print("Project is compliant.\n", .{});
+    } else {
+        for (result.issues) |msg| {
+            try stdout.print("{s}\n", .{msg});
+        }
+        try stdout.print("Policy issues detected.\n", .{});
+        try stdout.print("See policy at https://github.com/civic-interconnect/civic-dev/src/policy/project_policy.json\n", .{});
+    }
+
     return result.exit_code;
 }

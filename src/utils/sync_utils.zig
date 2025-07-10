@@ -111,13 +111,12 @@ pub fn syncProjectFolder(folder_name: []const u8) !void {
 /// This reads embedded file contents (e.g. `.gitignore`,
 /// `.gitattributes`) and writes them into the current repo,
 /// overwriting only if contents differ.
-/// 
+///
 /// Prints progress messages for each file synced or skipped.
 pub fn syncRootFiles() !void {
     var stdout = std.io.getStdOut().writer();
 
     for (embedded_root_files.files) |f| {
-
         var overwrite = true;
         if (fs_utils.fileExists(f.path)) {
             const existing = try fs_utils.readEntireFile(f.path);

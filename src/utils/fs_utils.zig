@@ -14,7 +14,7 @@
 //!
 //! Suitable for config files, small data, or text files.
 //! Not intended for reading very large files entirely into memory.
-//! 
+//!
 const std = @import("std");
 
 /// Deletes a file at the given path, if it exists.

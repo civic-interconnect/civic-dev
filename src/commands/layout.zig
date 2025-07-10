@@ -94,7 +94,15 @@ pub fn showLayoutWithWriter(
             defer dir.close();
 
             var it = dir.iterate();
-            while (try it.next()) |entry| {
+            while (true) {
+                const next_entry = it.next() catch |err| {
+                    try writer.print("Error reading directory entries: {}\n", .{err});
+                    break;
+                };
+
+                if (next_entry == null) break;
+
+                const entry = next_entry.?;
                 if (entry.kind == .directory) {
                     try writer.print("  - {s}\n", .{entry.name});
                 }
@@ -107,7 +115,6 @@ pub fn showLayoutWithWriter(
     try writer.print("Org Name:      unknown\n", .{});
     try writer.print("Policy Source: embedded JSON\n", .{});
 }
-
 
 /// CLI entry point for the layout command.
 ///

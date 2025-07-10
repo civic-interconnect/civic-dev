@@ -2,15 +2,16 @@
     .name = .civic_dev,
     .fingerprint = 0x4fce93a296286cf3,
     .description = "Civic Dev - A CLI tool for managing civic interconnect projects",
-    .authors = .{ "Civic Interconnect Team" },
+    .authors = .{"Civic Interconnect Team"},
     .repository = "https://github.com/civic-interconnect/civic-dev",
     .homepage = "https://civic-interconnect.github.io/civic-dev/",
     .documentation = "https://civic-interconnect.github.io/civic-dev/",
     .license = "MIT",
     .license_file = "LICENSE",
-    .version = "0.0.4",
-    
-    .minimum_zig_version = "0.15.0-dev.643+dc6ffc28b",
+    .version = "0.0.5",
+
+    // from https://ziglang.org/download/
+    .minimum_zig_version = "0.15.0-dev.936+fc2c1883b",
 
     .paths = .{
         ".gitattributes",

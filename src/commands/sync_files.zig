@@ -36,7 +36,6 @@ const std = @import("std");
 const sync_utils = @import("sync_utils");
 const repo_utils = @import("repo_utils");
 
-
 /// Prints usage instructions for civic-dev sync-files.
 fn printUsage() !void {
     var stdout = std.io.getStdOut().writer();
@@ -122,4 +121,3 @@ pub fn main() !void {
         }
     }
 }
-

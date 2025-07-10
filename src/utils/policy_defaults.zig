@@ -36,18 +36,15 @@ pub const embedded_policy_json =
     \\        ".gitattributes",
     \\        ".gitignore",
     \\        ".pre-commit-config.yaml",
+    \\        "config_log.json",
     \\        "DEVELOPER.md",
     \\        "LICENSE",
-    \\        "README.md",
-    \\        "runtime_config.yaml"
+    \\        "README.md"
     \\    ],
     \\    "pwa_project_files": [
     \\        "index.html",
     \\        "manifest.json",
     \\        "sw.js"
-    \\    ],
-    \\    "node_project_files": [
-    \\        "package.json"
     \\    ],
     \\    "python_project_files": [
     \\        "pyproject.toml"
@@ -59,11 +56,7 @@ pub const embedded_policy_json =
     \\    "docs": {
     \\        "docs_dir": "docs",
     \\        "docs_api_dir": "api"
-    \\    },
-    \\    "log_subdir": "logs",
-    \\    "log_file_template": "{time:YYYY-MM-DD}.log",
-    \\    "log_level": "INFO",
-    \\    "log_retention_days": 7
+    \\    }
     \\}
 ;
 

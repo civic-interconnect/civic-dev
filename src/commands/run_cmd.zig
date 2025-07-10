@@ -18,7 +18,6 @@ const fs_utils = @import("fs_utils");
 const repo_utils = @import("repo_utils");
 const subprocess = @import("subprocess");
 
-
 /// Prints a summary of recommended steps for a PWA repo.
 ///
 /// Informs the user that no automated command currently exists for
@@ -34,7 +33,7 @@ fn displayPWARunSummary(writer: anytype) !void {
         \\- Or run it via VS Code Live Server.
         \\
         \\No actions taken automatically.\n
-        ,
+    ,
         .{},
     );
 }
@@ -59,7 +58,7 @@ fn displayPythonRunSummary(writer: anytype) !void {
         \\    pytest tests/
         \\
         \\Proceeding in 2 seconds... Press Ctrl+C to cancel.\n
-        ,
+    ,
         .{},
     );
 }
@@ -78,10 +77,8 @@ pub fn main() !void {
         try displayPythonRunSummary(stdout);
         std.time.sleep(2_000_000_000);
         try subprocess.run("civic-dev", &[_][]const u8{"start-py"});
-
     } else if (std.mem.eql(u8, repo_type, "pwa")) {
         try displayPWARunSummary(stdout);
-
     } else {
         try stdout.print(
             "Could not detect repo type. Please specify manually.\n",

@@ -67,8 +67,6 @@ pub fn bumpVersion(old_version: []const u8, new_version: []const u8) !void {
     }
 }
 
-
-
 /// Replaces all occurrences of `old` with `new` in the file at `path`.
 ///
 /// Returns `true` if the file was modified, otherwise `false`.

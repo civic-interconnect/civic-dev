@@ -49,7 +49,6 @@ pub fn loadPolicyFromFile(
     allocator: std.mem.Allocator,
     file_path: []const u8,
 ) anyerror!std.json.Parsed(std.json.Value) {
-    
     const bytes = try std.fs.cwd().readFileAlloc(
         allocator,
         file_path,

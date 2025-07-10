@@ -3,11 +3,12 @@
 ## Install
 
 1. [Install Zig](https://ziglang.org/download/) (≥ version recommended in repo README).
-2. [Install Git](https://git-scm.com/).
-3. [Install GitHub CLI](https://cli.github.com/).
-4. [Install VS Code](https://code.visualstudio.com/download)
-5. [Install VS Code Extension: **Zig Language**](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig)
-6. [Install anyzig](https://marler8997.github.io/anyzig/)
+2. [Install anyzig](https://marler8997.github.io/anyzig/) - and include in PATH
+3. [Install Git](https://git-scm.com/).
+4. [Install GitHub CLI](https://cli.github.com/).
+5. [Install VS Code](https://code.visualstudio.com/download)
+6. [Install VS Code Extension: **Zig Language**](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig)
+
 
 ## Fork and Clone
 
@@ -20,7 +21,13 @@
     git clone https://github.com/<your-username>/civic-dev.git
     cd civic-dev
     pre-commit install
+    pre-commit autoupdate
     ```
+
+## Keep Zig updated
+
+Update the min zig version in the build.zig.zon file. Any zig will automatically download and install it.
+To switch, just say `(Get-Command zig).Source` and find the path. Delete older versions and run `zig`.
 
 ## Get Started
 
@@ -33,16 +40,16 @@ zig build test
 zig fmt .
 pre-commit run --all-files
 pre-commit run --all-files
+zig build docs
 zig-out\bin\civic-dev.exe
 
-# make updates
+# Git add-commit-push updates
 
 git add .
 git commit -m "describe changes"
-git push origin main
+git push -u origin main
 
-# when ready, update version in release.ps1
-# then run release.ps1 (it will add-commit-push changes and new tag)
+# when ready, UPDATE version numbers in release.ps1 THEN run release.ps1 (it will add-commit-push changes and new tag)
 ./release.ps1
 ```
 
@@ -55,34 +62,33 @@ Windows: copy from zig-out/bin/civic-dev.exe to C:\Users\edaci\AppData\Local\Mic
 ```powershell
 git pull origin main
 Remove-Item -Recurse -Force .zig-cache, zig-out
+zig build
 zig build test
 zig fmt .
 pre-commit run --all-files
+pre-commit run --all-files
+zig build docs
+zig-out\bin\civic-dev.exe layout
+zig-out\bin\civic-dev.exe check-policy
 ```
 
 Repeat the pre-commit several times as needed.
 
-Important: Update version numbers in the release.ps1 script before running.
+Test locally: Copy `zig-out/bin/civic-dev.exe` to include it in your PATH.
+- For example, on Windows, put the executable in C:\Users\<username>\AppData\Local\Microsoft\WindowsApps.
+
+```pwsh
+civic-dev layout
+civic-dev check-policy
+```
+
+**Important**: Update version numbers in the release.ps1 script before running.
 
 ```
 ./release.ps1
 ```
 
+## AnyZig Notes
 
-## Quick Workflow
-
-Typical development flow:
-
-```powershell
-git pull
-zig build test
-zig fmt
-zig build run -- layout
-```
-
----
-
-**Notes:**
-
-- Commands are wired into `src/main.zig`.
-- Shared files like policies, templates, etc. are in `shared_files/`.
+zig any
+zig zen
