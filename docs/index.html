@@ -372,20 +372,7 @@
 </head>
 
 <body>
-  <script>
-    (function () {
-      const isGhPages = location.hostname.endsWith('.github.io');
-      if (isGhPages) {
-        const repo = '/civic-dev/docs/';
-        const base = document.createElement('base');
-        base.href = repo;
-        document.head.appendChild(base);
-      }
-      else {
-        console.log('Running in local mode — no <base> tag needed.');
-      }
-    })();
-  </script>
+
   <nav>
     <a class="logo" href="#">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 140">

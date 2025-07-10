@@ -94,38 +94,18 @@ In **docs/main.js**, change sources to ./sources:
 
 In **docs/index.html**:
 
-1. Add base script at the top of `body`:
-
-    ```html
-    <body>
-    <script>
-        (function () {
-        const isGhPages = location.hostname.endsWith('.github.io');
-        if (isGhPages) {
-            const repo = '/civic-dev/docs/';
-            const base = document.createElement('base');
-            base.href = repo;
-            document.head.appendChild(base);
-        }
-        else {
-            console.log('Running in local mode — no <base> tag needed.');
-        }
-        })();
-    </script>
-    ```
-
-2. Change main to ./main :
+1. Change main to ./main :
 
     ```html
     <script src="main.js"></script>
     <script src="./main.js"></script>
     ```
 
-3. In kbd styles, delete:
+2. In kbd styles, delete:
 
     `box-shadow-color: #c6cbd1; `
 
-4. In kbd styles, change
+3. In kbd styles, change
 
     `box-shadow: inset 0 -1px 0;`
     to:
