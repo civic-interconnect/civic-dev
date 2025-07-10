@@ -7,6 +7,7 @@
 3. [Install GitHub CLI](https://cli.github.com/).
 4. [Install VS Code](https://code.visualstudio.com/download)
 5. [Install VS Code Extension: **Zig Language**](https://marketplace.visualstudio.com/items?itemName=ziglang.vscode-zig)
+6. [Install anyzig](https://marler8997.github.io/anyzig/)
 
 ## Fork and Clone
 

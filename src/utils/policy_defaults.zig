@@ -1,17 +1,31 @@
-//
-// src/utils/policy_defaults.zig
-//
-// Embedded default policy definitions for Civic Interconnect.
-//
-// Provides:
-// - Embedded JSON describing required project files, directories,
-//   docs layout, and logging settings.
-// - Function to parse the embedded JSON into a
-//   std.json.Parsed(std.json.Value) object.
-// - Helper to extract arrays of strings from the parsed policy.
-//
-// Civic Interconnect — MIT License
-//
+//! src/utils/policy_defaults.zig
+//!
+//! # Civic Interconnect: Policy Defaults
+//!
+//! Provides embedded default policy definitions for Civic Interconnect
+//! projects, along with helpers to work with the policy.
+//!
+//! Features:
+//! - Embedded JSON describing required project files, directories,
+//!   docs layout, and logging settings.
+//! - Function to parse the embedded JSON into a `std.json.Parsed` object.
+//! - Helper function to extract arrays of strings from the parsed policy.
+//!
+//! ## Example
+//!
+//! ```zig
+//! const policy_defaults = @import("policy_defaults");
+//!
+//! var parsed = try policy_defaults.loadEmbeddedPolicy(allocator);
+//! defer parsed.deinit();
+//!
+//! const policy_value = parsed.value;
+//! const files = policy_defaults.getArrayOfStrings(policy_value, "required_files") orelse &[_][]const u8{};
+//!
+//! for (files) |file| {
+//!     std.debug.print("Required file: {s}\n", .{file});
+//! }
+//! ```
 
 const std = @import("std");
 

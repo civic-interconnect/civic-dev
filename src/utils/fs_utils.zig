@@ -1,51 +1,20 @@
-//
-// src/utils/fs_utils.zig
-//
-// Provides utility functions for reading and writing entire files,
-// deleting files, listing directory contents, and checking file
-// and directory existence.
-//
-// Features:
-// - deleteFileIfExists(path)
-//     Deletes the specified file if it exists. No error if not found.
-//
-// - dirExists(path)
-//     Checks if a directory exists at a given path.
-//
-// - dirExistsInDir(dir, path)
-//     Checks if a directory exists relative to an open directory handle.
-//
-// - fileExists(path)
-//     Checks if a file exists at a given path.
-//
-// - fileExistsInDir(dir, path)
-//     Checks if a file exists relative to an open directory handle.
-//
-// - listDir(dir, allocator)
-//     Returns a list of file and folder names in a given directory.
-//
-// - readEntireFile(path)
-//     Reads the entire contents of a file into a newly allocated buffer.
-//     Returns a slice with the file’s bytes.
-//
-// - readEntireFileFromDir(dir, path)
-//     Reads a file from a provided directory handle.
-//
-// - writeFile(path, contents)
-//     Writes the given byte slice to a file at the specified path.
-//     Overwrites the file if it exists.
-//
-// - writeFileToDir(dir, path, contents)
-//     Writes data to a file relative to a provided directory handle.
-//     Overwrites the file if it exists.
-//
-// WARNING:
-// These functions are not suitable for reading very large files entirely
-// into memory. Intended for config files, small data, or text files.
-//
-// Civic Interconnect — MIT License
-//
-
+//! src/utils/fs_utils.zig
+//!
+//! # Civic Interconnect: File System Utilities
+//!
+//! Provides utility functions for working with the file system.
+//!
+//! Features:
+//! - Check if files or directories exist
+//! - Delete files and directories safely
+//! - List directory contents
+//! - Read entire files into memory
+//! - Write files to disk
+//! - Remove Python virtual environments (.venv)
+//!
+//! Suitable for config files, small data, or text files.
+//! Not intended for reading very large files entirely into memory.
+//! 
 const std = @import("std");
 
 /// Deletes a file at the given path, if it exists.
@@ -157,6 +126,16 @@ pub fn readEntireFileFromDir(
     path: []const u8,
 ) ![]u8 {
     return readEntireFileFromDirAlloc(std.heap.page_allocator, dir, path);
+}
+
+/// Removes the `.venv` folder if it exists.
+/// Prints a message if deleted.
+pub fn removeVenv() !void {
+    if (dirExists(".venv")) {
+        try std.fs.cwd().deleteTree(".venv");
+        var stdout = std.io.getStdOut().writer();
+        try stdout.print("Removed .venv\n", .{});
+    }
 }
 
 /// Writes the given bytes to a file at the specified path.

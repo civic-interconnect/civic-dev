@@ -1,0 +1,27 @@
+{
+    "required_files": [
+        ".gitattributes",
+        ".gitignore",
+        ".pre-commit-config.yaml",
+        "config_log.json",
+        "DEVELOPER.md",
+        "LICENSE",
+        "README.md"
+    ],
+    "pwa_project_files": [
+        "index.html",
+        "manifest.json",
+        "sw.js"
+    ],
+    "python_project_files": [
+        "pyproject.toml"
+    ],
+    "python_project_dirs": [
+        "src"
+    ],
+    "max_python_file_length": 1000,
+    "docs": {
+        "docs_dir": "docs",
+        "docs_api_dir": "api"
+    }
+}

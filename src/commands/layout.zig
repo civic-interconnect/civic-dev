@@ -1,17 +1,49 @@
-// src/commands/layout.zig
-//
-// Prints a summary of the Civic Interconnect project layout,
-// including docs directories, source directories, and detected packages.
+//! src/commands/layout.zig
+//!
+//! # civic-dev: layout Command
+//!
+//! Prints a summary of the Civic Interconnect project layout.
+//!
+//! Displays:
+//! - The project root directory
+//! - Documentation directories (if configured)
+//! - Python source directories (if configured)
+//! - Detected packages within the `src` folder
+//! - Policy source information
+//!
+//! This command helps developers quickly understand the
+//! structure of a Civic Interconnect project.
+//!
+//! ## Example
+//!
+//! To print the layout to the terminal:
+//!
+//! ```bash
+//! civic-dev layout
+//! ```
 
 const std = @import("std");
 const policy_defaults = @import("policy_defaults");
 const fs_utils = @import("fs_utils");
 
-pub fn main(allocator: std.mem.Allocator) !void {
-    const stdout = std.io.getStdOut().writer();
-    try showLayoutWithWriter(allocator, stdout);
-}
-
+/// Prints a detailed Civic Interconnect project layout summary.
+///
+/// Accepts any writer, allowing use in CLI tools or testing scenarios.
+///
+/// Prints:
+/// - Project root directory
+/// - Documentation directories (if configured in policy)
+/// - Python source directories (if configured in policy)
+/// - Packages detected under `src`
+/// - Organization name and policy source
+///
+/// ## Example
+///
+/// ```zig
+/// var allocator = std.heap.page_allocator;
+/// const stdout = std.io.getStdOut().writer();
+/// try showLayoutWithWriter(allocator, stdout);
+/// ```
 pub fn showLayoutWithWriter(
     allocator: std.mem.Allocator,
     writer: anytype,
@@ -74,4 +106,19 @@ pub fn showLayoutWithWriter(
 
     try writer.print("Org Name:      unknown\n", .{});
     try writer.print("Policy Source: embedded JSON\n", .{});
+}
+
+
+/// CLI entry point for the layout command.
+///
+/// Prints the layout summary to standard output.
+///
+/// ## Example
+///
+/// ```bash
+/// civic-dev layout
+/// ```
+pub fn main(allocator: std.mem.Allocator) !void {
+    const stdout = std.io.getStdOut().writer();
+    try showLayoutWithWriter(allocator, stdout);
 }

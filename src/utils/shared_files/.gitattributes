@@ -1,0 +1,60 @@
+# ----------------------------------------
+# Default text handling
+# ----------------------------------------
+
+# Automatically normalize all text files
+* text=auto
+
+# ----------------------------------------
+# Source code files - always use LF
+# ----------------------------------------
+
+*.zig text eol=lf
+*.c text eol=lf
+*.h text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.ts text eol=lf
+*.js text eol=lf
+
+# ----------------------------------------
+# Windows-friendly files
+# ----------------------------------------
+
+# PowerShell scripts: CRLF on Windows
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# ----------------------------------------
+# Binary files (never converted)
+# ----------------------------------------
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.xz binary
+*.7z binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.a binary
+*.o binary
+*.obj binary
+
+# ----------------------------------------
+# Mac-specific files
+# ----------------------------------------
+
+.DS_Store binary

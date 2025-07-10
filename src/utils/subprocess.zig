@@ -1,17 +1,24 @@
-//
-// src/utils/subprocess.zig
-//
-// Provides utilities for running external commands from Zig.
-//
-// Features:
-// - run(prog, args)
-//     Executes an external command with arguments.
-//     Prints the command line to stdout.
-//     Fails if the command exits with a non-zero code,
-//     or is terminated by a signal.
-//
-// Civic Interconnect — MIT License
-//
+//! src/utils/subprocess.zig
+//!
+//! # Civic Interconnect: Subprocess Utilities
+//!
+//! Provides utilities for running external commands from Zig.
+//!
+//! ## Features
+//!
+//! - `run(prog, args)`
+//!     Executes an external command with arguments.
+//!     Prints the command line to stdout.
+//!     Fails if the command exits with a non-zero code
+//!     or is terminated by a signal.
+//!
+//! ## Example
+//!
+//! ```zig
+//! const subprocess = @import("subprocess");
+//!
+//! try subprocess.run("echo", &[_][]const u8{"hello, world"});
+//! ```
 
 const std = @import("std");
 
@@ -21,14 +28,9 @@ pub const CommandFailed = error{CommandFailed};
 /// Runs an external command with arguments.
 /// Prints the command to stdout and checks its exit status.
 ///
-/// Example:
-/// ```zig
-/// try subprocess.run("echo", &[_][]const u8{"hello, world"});
-/// ```
-///
 /// Returns:
 /// - `void` if the command succeeded (exit code 0)
-/// - `CommandFailed` if the command failed
+/// - `CommandFailed` if the command failed or was terminated
 pub fn run(prog: []const u8, args: []const []const u8) !void {
     var stdout = std.io.getStdOut().writer();
 

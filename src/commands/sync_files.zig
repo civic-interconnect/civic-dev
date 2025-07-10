@@ -1,31 +1,71 @@
-//
-// civic-dev sync-files
-//
-// Synchronizes shared Civic Interconnect files into the current repo.
-//
-// By default, this command copies:
-//   - shared root-level files (e.g. .gitignore, LICENSE)
-//   - project-specific files (e.g. Python or PWA configs)
-//
-// Only overwrites files if content differs.
-//
-// Flags:
-//   --root             Sync only root-level shared files.
-//   --project          Sync only project-specific files (auto-detect project type).
-//   --project py       Sync only Python-specific files.
-//   --project pwa      Sync only PWA-specific files.
-//
-// Example:
-//   civic-dev sync-files
-//   civic-dev sync-files --root
-//   civic-dev sync-files --project py
-//
-//
+//! src/commands/sync_files.zig
+//!
+//! # civic-dev: sync-files Command
+//!
+//! Synchronizes shared Civic Interconnect files into the current repo.
+//!
+//! By default, this command copies:
+//! - Shared root-level files (e.g. .gitignore, LICENSE)
+//! - Project-specific files (e.g. Python or PWA configs)
+//!
+//! Only overwrites files if content differs.
+//!
+//! ## Flags
+//!
+//! - `--root`
+//!     Sync only root-level shared files.
+//!
+//! - `--project`
+//!     Sync only project-specific files (auto-detects project type).
+//!
+//! - `--project py`
+//!     Sync only Python-specific files.
+//!
+//! - `--project pwa`
+//!     Sync only PWA-specific files.
+//!
+//! ## Examples
+//!
+//! ```bash
+//! civic-dev sync-files
+//! civic-dev sync-files --root
+//! civic-dev sync-files --project py
+//! ```
 
 const std = @import("std");
 const sync_utils = @import("sync_utils");
-const run = @import("run.zig");
+const repo_utils = @import("repo_utils");
 
+
+/// Prints usage instructions for civic-dev sync-files.
+fn printUsage() !void {
+    var stdout = std.io.getStdOut().writer();
+    try stdout.print(
+        \\Usage: civic-dev sync-files [--root] [--project [py|pwa]]
+        \\
+        \\Options:
+        \\  --root             Only sync root shared files
+        \\  --project          Only sync project-specific files (auto-detect project type)
+        \\  --project py       Force sync Python project files
+        \\  --project pwa      Force sync PWA project files
+        \\
+    , .{});
+}
+
+/// CLI entry point for civic-dev sync-files.
+///
+/// Synchronizes shared Civic Interconnect files into the current repo,
+/// based on the provided flags:
+/// - Root-level shared files
+/// - Project-specific files (auto-detected or explicitly specified)
+///
+/// Prints progress and warnings as needed.
+///
+/// ## Example
+///
+/// ```bash
+/// civic-dev sync-files --project py
+/// ```
 pub fn main() !void {
     var stdout = std.io.getStdOut().writer();
 
@@ -68,7 +108,7 @@ pub fn main() !void {
         if (forced_project) |proj| {
             repo_type = proj;
         } else {
-            repo_type = try run.detectRepoType();
+            repo_type = try repo_utils.detectRepoType();
         }
 
         if (std.mem.eql(u8, repo_type, "python")) {
@@ -83,16 +123,3 @@ pub fn main() !void {
     }
 }
 
-fn printUsage() !void {
-    var stdout = std.io.getStdOut().writer();
-    try stdout.print(
-        \\Usage: civic-dev sync-files [--root] [--project [py|pwa]]
-        \\
-        \\Options:
-        \\  --root             Only sync root shared files
-        \\  --project          Only sync project-specific files (auto-detect project type)
-        \\  --project py       Force sync Python project files
-        \\  --project pwa      Force sync PWA project files
-        \\
-    , .{});
-}

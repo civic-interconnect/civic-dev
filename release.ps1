@@ -58,6 +58,23 @@ Invoke-Checked "zig build test"
 # Build for release (ReleaseSafe)
 Invoke-Checked "zig build -Doptimize=ReleaseSafe"
 
+# Build the documentation
+Write-Host "Building documentation..."
+Invoke-Checked "zig build docs"
+$sourceDocsPath = ".\zig-out\docs"
+$destinationDocsPath = ".\docs"
+if (Test-Path $sourceDocsPath) {
+    Write-Host "Copying documentation from '$sourceDocsPath' to '$destinationDocsPath'..."
+    # Create the destination directory if it doesn't exist
+    if (-not (Test-Path $destinationDocsPath)) {
+        New-Item -ItemType Directory -Path $destinationDocsPath | Out-Null
+    }
+    # Copy all contents recursively
+    Copy-Item -Path "$sourceDocsPath\*" -Destination $destinationDocsPath -Recurse -Force
+} else {
+    Write-Warning "WARNING: Documentation source path '$sourceDocsPath' not found. Skipping docs copy."
+}
+
 Write-Host "Using the CLI to bump version from $oldVersion to $newVersion"
 
 # Bump version in files using the CLI tool

@@ -1,6 +1,8 @@
 name: CLI Nightly Zig Check
 
 on:
+  workflow_dispatch:
+  # Run nightly at 3 AM UTC
   schedule:
     - cron: "0 3 * * *"
 

@@ -30,14 +30,16 @@ pub fn build(b: *std.Build) void {
         .{ .name = "check_policy", .path = "src/commands/check_policy.zig" },
         .{ .name = "layout", .path = "src/commands/layout.zig" },
         .{ .name = "release", .path = "src/commands/release.zig" },
-        .{ .name = "run", .path = "src/commands/run.zig" },
+        .{ .name = "run_cmd", .path = "src/commands/run_cmd.zig" },
         .{ .name = "setup_py", .path = "src/commands/setup_py.zig" },
         .{ .name = "start_py", .path = "src/commands/start_py.zig" },
         .{ .name = "sync_files", .path = "src/commands/sync_files.zig" },
 
+        .{ .name = "embedded_root_files", .path = "src/utils/embedded_root_files.zig" },
         .{ .name = "fs_utils", .path = "src/utils/fs_utils.zig" },
         .{ .name = "policy_file_loader", .path = "src/utils/policy_file_loader.zig" },
         .{ .name = "policy_defaults", .path = "src/utils/policy_defaults.zig" },
+        .{ .name = "repo_utils", .path = "src/utils/repo_utils.zig" },
         .{ .name = "subprocess", .path = "src/utils/subprocess.zig" },
         .{ .name = "sync_utils", .path = "src/utils/sync_utils.zig" },
         .{ .name = "toml_utils", .path = "src/utils/toml_utils.zig" },
@@ -65,13 +67,13 @@ pub fn build(b: *std.Build) void {
     // Wire all modules as imports to the executable
     addImports(exe.root_module, mods);
 
-    // Wire individual dependencies
-    mods.get("run").?.addImport("fs_utils", mods.get("fs_utils").?);
-
+    // List all util modules and add them to civic_dev
     const civic_deps = &[_][]const u8{
+        "embedded_root_files",
         "fs_utils",
-        "policy_file_loader",
         "policy_defaults",
+        "policy_file_loader",
+        "repo_utils",
         "subprocess",
         "sync_utils",
         "toml_utils",
@@ -80,55 +82,92 @@ pub fn build(b: *std.Build) void {
         mods.get("civic_dev").?.addImport(dep, mods.get(dep).?);
     }
 
+    // add additional individual imports for each command module
     mods.get("bump_version").?.addImport("fs_utils", mods.get("fs_utils").?);
+
     mods.get("check_policy").?.addImport("fs_utils", mods.get("fs_utils").?);
     mods.get("check_policy").?.addImport("policy_defaults", mods.get("policy_defaults").?);
+
     mods.get("layout").?.addImport("fs_utils", mods.get("fs_utils").?);
     mods.get("layout").?.addImport("policy_defaults", mods.get("policy_defaults").?);
+
     mods.get("release").?.addImport("bump_version", mods.get("bump_version").?);
     mods.get("release").?.addImport("fs_utils", mods.get("fs_utils").?);
     mods.get("release").?.addImport("subprocess", mods.get("subprocess").?);
+
+    mods.get("run_cmd").?.addImport("fs_utils", mods.get("fs_utils").?);
+    mods.get("run_cmd").?.addImport("repo_utils", mods.get("repo_utils").?);
+    mods.get("run_cmd").?.addImport("subprocess", mods.get("subprocess").?);
+
     mods.get("setup_py").?.addImport("fs_utils", mods.get("fs_utils").?);
+
     mods.get("start_py").?.addImport("fs_utils", mods.get("fs_utils").?);
-    mods.get("sync_files").?.addImport("fs_utils", mods.get("fs_utils").?);
+
+    mods.get("sync_files").?.addImport("repo_utils", mods.get("repo_utils").?);
+    mods.get("sync_files").?.addImport("sync_utils", mods.get("sync_utils").?);
+
+    // add additional individual imports for each utility module
+
+    mods.get("repo_utils").?.addImport("fs_utils", mods.get("fs_utils").?);
+
+    mods.get("sync_utils").?.addImport("embedded_root_files", mods.get("embedded_root_files").?);
     mods.get("sync_utils").?.addImport("fs_utils", mods.get("fs_utils").?);
+
     mods.get("toml_utils").?.addImport("fs_utils", mods.get("fs_utils").?);
 
     b.installArtifact(exe);
 
     //
+    // === BUILD DOCS ===
+    //
+
+    // Generate docs into zig-out/docs
+    const install_docs = b.addInstallDirectory(.{
+        .source_dir = exe.getEmittedDocs(),
+        .install_dir = .prefix,
+        .install_subdir = "docs",
+    });
+
+    // Run PowerShell script to clean ./docs
+    const clean_docs_step = b.addSystemCommand(&.{
+        "powershell",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "clean_docs.ps1",
+    });
+
+    // Copy docs from zig-out/docs to ./docs
+    const copy_docs = b.addInstallDirectory(.{
+        .source_dir = b.path("zig-out/docs"),
+        .install_dir = .prefix,
+        .install_subdir = "../docs",
+    });
+
+    // Define the docs build step
+    const docs_step = b.step("docs", "Generate and install project documentation");
+    docs_step.dependOn(&install_docs.step);
+    docs_step.dependOn(&clean_docs_step.step);
+    docs_step.dependOn(&copy_docs.step);
+
+    //
     // === BUILD TESTS ===
     //
 
-    const test_files = &[_][]const u8{
-        "src/tests/test_bump_version.zig",
-        "src/tests/test_check_policy.zig",
-        "src/tests/test_layout.zig",
-        "src/tests/test_release.zig",
-        "src/tests/test_run.zig",
-        "src/tests/test_setup_py.zig",
-        "src/tests/test_start_py.zig",
-        "src/tests/test_sync_files.zig",
-        "src/tests/utils/test_fs_utils.zig",
-        "src/tests/utils/test_policy_defaults.zig",
-        "src/tests/utils/test_policy_file_loader.zig",
-        "src/tests/utils/test_subprocess.zig",
-        "src/tests/utils/test_sync_utils.zig",
-        "src/tests/utils/test_toml_utils.zig",
-    };
+    const test_exe = b.addTest(.{
+        .root_source_file = b.path("src/tests/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
 
-    var test_steps = std.ArrayList(*std.Build.Step).init(b.allocator);
-    defer test_steps.deinit();
+    // Add module imports if needed
+    addImports(test_exe.root_module, mods);
 
-    for (test_files) |file_path| {
-        const t = addTestForFile(b, file_path, target, optimize, mods);
-        test_steps.append(t) catch unreachable;
-    }
+    const run_tests = b.addRunArtifact(test_exe);
 
-    const test_step = b.step("test", "Run all tests.");
-    for (test_steps.items) |s| {
-        test_step.dependOn(s);
-    }
+    // use either zig build test or zig build tests
+    b.step("test", "Run all tests.").dependOn(&run_tests.step);
+    b.step("tests", "Run all tests.").dependOn(&run_tests.step);
 }
 
 //

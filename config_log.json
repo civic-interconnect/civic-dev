@@ -1,0 +1,6 @@
+{
+  "log_subdir": "logs",
+  "log_file_template": "{time:YYYY-MM-DD}.log",
+  "log_level": "INFO",
+  "log_retention_days": 7
+}
