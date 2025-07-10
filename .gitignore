@@ -83,6 +83,7 @@ test.exe
 *.exe
 *.zip
 *.tar
+!docs/sources.tar
 *.tar.gz
 
 # Common test artifacts

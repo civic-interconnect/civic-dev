@@ -41,9 +41,13 @@ zig fmt .
 pre-commit run --all-files
 pre-commit run --all-files
 zig build docs
+./docs_post.ps1
 zig-out\bin\civic-dev.exe
+zig-out\bin\civic-dev.exe layout
+zig-out\bin\civic-dev.exe check-policy
 
-# Git add-commit-push updates
+# Verify docs, after all changes are good,
+# git add-commit-push updates
 
 git add .
 git commit -m "describe changes"
@@ -68,6 +72,9 @@ zig fmt .
 pre-commit run --all-files
 pre-commit run --all-files
 zig build docs
+./post_docs.ps1
+pre-commit run --all-files
+pre-commit run --all-files
 zig-out\bin\civic-dev.exe layout
 zig-out\bin\civic-dev.exe check-policy
 ```
@@ -82,38 +89,7 @@ civic-dev layout
 civic-dev check-policy
 ```
 
-## Manual Updates for Documentation on GH Pages
 
-In **docs/main.js**, change sources to ./sources:
-
-    ```javascript
-    let sources_promise = fetch("sources.tar").then(function(response) {
-
-    let sources_promise = fetch("./sources.tar").then(function(response) {
-    ```
-
-In **docs/index.html**:
-
-1. Change main to ./main :
-
-    ```html
-    <script src="main.js"></script>
-    <script src="./main.js"></script>
-    ```
-
-2. In kbd styles, delete:
-
-    `box-shadow-color: #c6cbd1; `
-
-3. In kbd styles, change
-
-    `box-shadow: inset 0 -1px 0;`
-    to:
-    `box-shadow: inset 0 -1px 0 #c6cbd1;`
-
-```
-
-## Manually Update docs/
 
 **Important**: Update version numbers in the release.ps1 script before running.
 

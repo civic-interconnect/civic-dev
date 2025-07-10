@@ -135,7 +135,7 @@ pub fn build(b: *std.Build) void {
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "clean_docs.ps1",
+        "docs_clean.ps1",
     });
 
     // Define the docs build step
