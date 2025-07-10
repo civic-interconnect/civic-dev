@@ -1,6 +1,6 @@
 # civic-dev (Command Line Interface)
 
-[![Version](https://img.shields.io/badge/version-v0.0.6-blue)](https://github.com/civic-interconnect/civic-dev/releases)
+[![Version](https://img.shields.io/badge/version-v0.0.7-blue)](https://github.com/civic-interconnect/civic-dev/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Build](https://github.com/civic-interconnect/civic-dev/actions/workflows/build.yml/badge.svg)](https://github.com/civic-interconnect/civic-dev/actions/workflows/build.yml)
 [![Nightly Zig Check](https://github.com/civic-interconnect/civic-dev/actions/workflows/zig_check.yml/badge.svg)](https://github.com/civic-interconnect/civic-dev/actions/workflows/zig_check.yml)
