@@ -82,6 +82,59 @@ civic-dev layout
 civic-dev check-policy
 ```
 
+## Manual Updates for Documentation on GH Pages
+
+In **docs/main.js**, change sources to ./sources:
+
+    ```javascript
+    let sources_promise = fetch("sources.tar").then(function(response) {
+
+    let sources_promise = fetch("./sources.tar").then(function(response) {
+    ```
+
+In **docs/index.html**:
+
+1. Add base script at the top of `body`:
+
+    ```html
+    <body>
+    <script>
+        (function () {
+        const isGhPages = location.hostname.endsWith('.github.io');
+        if (isGhPages) {
+            const repo = '/civic-dev/docs/';
+            const base = document.createElement('base');
+            base.href = repo;
+            document.head.appendChild(base);
+        }
+        else {
+            console.log('Running in local mode — no <base> tag needed.');
+        }
+        })();
+    </script>
+    ```
+
+2. Change main to ./main :
+
+    ```html
+    <script src="main.js"></script>
+    <script src="./main.js"></script>
+    ```
+
+3. In kbd styles, delete:
+
+    `box-shadow-color: #c6cbd1; `
+
+4. In kbd styles, change
+
+    `box-shadow: inset 0 -1px 0;`
+    to:
+    `box-shadow: inset 0 -1px 0 #c6cbd1;`
+
+```
+
+## Manually Update docs/
+
 **Important**: Update version numbers in the release.ps1 script before running.
 
 ```

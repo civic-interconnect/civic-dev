@@ -80,7 +80,7 @@
     const moduleList = [];
 
     let wasm_promise = fetch("main.wasm");
-    let sources_promise = fetch("sources.tar").then(function(response) {
+    let sources_promise = fetch("./sources.tar").then(function(response) {
       if (!response.ok) throw new Error("unable to download sources");
       return response.arrayBuffer();
     });
